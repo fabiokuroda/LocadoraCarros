@@ -1,5 +1,7 @@
 package com.locadora.LocadoraCarros.model;
 
+import java.io.Serializable;
+
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -17,7 +19,12 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class Clientes{
+public class Clientes implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
@@ -32,7 +39,4 @@ public class Clientes{
 	@Column(nullable = false)
 	private String nome_cliente;
 	
-//	@OneToOne
-//	@JoinColumn(name = "cpf_cliente", insertable=false, updatable=false)
-//	private Clientes clientes;
 }

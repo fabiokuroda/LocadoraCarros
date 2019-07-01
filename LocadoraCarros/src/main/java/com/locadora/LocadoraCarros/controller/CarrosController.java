@@ -5,6 +5,7 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.locadora.LocadoraCarros.model.Carros;
+import com.locadora.LocadoraCarros.model.Clientes;
 import com.locadora.LocadoraCarros.repository.CarrosRepository;
 
 @RestController
@@ -48,5 +50,17 @@ public class CarrosController {
 		
 	    return carrosRepository.save(carrosOri);
 	}
+	
+	@DeleteMapping("/carro/{id_carro}")
+    public List<Carros> delete(@PathVariable("id_carro") Integer id_carro) throws Exception
+    {	
+		try {
+			carrosRepository.deleteById(id_carro);
+		}catch(Throwable e) {
+			throw new Exception("Não foi possível excluir carro.");
+		}
+        return carrosRepository.findAll();
+    }
+
 }
 	

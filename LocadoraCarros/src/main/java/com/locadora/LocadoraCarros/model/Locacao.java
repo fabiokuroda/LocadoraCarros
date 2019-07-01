@@ -1,5 +1,6 @@
 package com.locadora.LocadoraCarros.model;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -20,7 +21,12 @@ import lombok.Setter;
 @Getter 
 @Setter
 @NoArgsConstructor
-public class Locacao {
+public class Locacao implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	@Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
     private Integer id;
