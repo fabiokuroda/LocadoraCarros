@@ -1,7 +1,7 @@
 package com.locadora.teste;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -68,8 +68,8 @@ public class LocadoraCarrosApplicationTests extends AbstractTransactionalJUnit4S
 		Locacao locacao = new Locacao();
 		locacao.setId_carro(1);
 		locacao.setId_cliente(1);
-		locacao.setData_inicio(new Date(2019,07,01));
-		locacao.setData_fim(new Date(2019,07,05));
+		locacao.setData_inicio(LocalDate.of(2019,07,01));
+		locacao.setData_fim(LocalDate.of(2019,07,05));
 		locacao.setStatus(1);
 		locacao.setValor(new BigDecimal("200"));
 		ResponseEntity<Locacao> postResponse = restTemplate.postForEntity(getRootUrl() + "/locacao/incluirLocacao", locacao, Locacao.class);

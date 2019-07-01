@@ -1,12 +1,12 @@
 package com.locadora.LocadoraCarros.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 import com.locadora.LocadoraCarros.model.Locacao;
 
-public interface LocacaoRepository extends CrudRepository<Locacao, Integer>{
+public interface LocacaoRepository extends JpaRepository<Locacao, Integer>{
 	
 	@Query(value="select count(l.id) from com.locadora.LocadoraCarros.model.Clientes c inner join com.locadora.LocadoraCarros.model.Locacao l on "
 			+ "(c.id_cliente = l.id_cliente and l.status = 1) where c.id_cliente = :id ")

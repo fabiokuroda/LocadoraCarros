@@ -1,6 +1,7 @@
 package com.locadora.LocadoraCarros.controller;
 
-import java.util.Optional;
+import java.time.LocalDate;
+import java.util.List;
 
 import javax.validation.Valid;
 
@@ -8,12 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.locadora.LocadoraCarros.model.Locacao;
@@ -22,7 +22,7 @@ import com.locadora.LocadoraCarros.repository.ClientesRepository;
 import com.locadora.LocadoraCarros.repository.LocacaoRepository;
 
 @RestController
-@RequestMapping({"/locacao"})
+@RequestMapping({"/api"})
 public class LocacaoController {
 	@Autowired
 	private LocacaoRepository locacaoRepository;
@@ -32,8 +32,7 @@ public class LocacaoController {
 	private ClientesRepository clientesRepository;
 	
 	@SuppressWarnings("deprecation")
-	@PostMapping("/incluirLocacao")
-	@ResponseBody
+	@PostMapping("/locacao")
 	public ResponseEntity<?> incluirLocacao(@Valid @RequestBody Locacao locacao) {
 		//Verifica se existe carro cadastrado
 		if (!carrosRepository.findById(locacao.getId_carro()).isPresent()) {
@@ -55,40 +54,40 @@ public class LocacaoController {
 			return new ResponseEntity<>("Carro está alugado.",HttpStatus.METHOD_FAILURE);
 		}
 		
-		//Verifica de data fim é maior que data inicio
-		if (locacao.getData_fim().before(locacao.getData_inicio())) {
-			return new ResponseEntity<>("Data final é maior que a inicial.",HttpStatus.METHOD_FAILURE);
+		//Verifica de data inicio é anterior a data atual
+		if (locacao.getData_inicio().isBefore(LocalDate.now())) {
+			return new ResponseEntity<>("Data inicio é anterior que a atual.", HttpStatus.METHOD_FAILURE);
+		}
+
+		//Verifica de data fim é anterior que data inicio
+		if (locacao.getData_fim().isBefore(locacao.getData_inicio())) {
+			return new ResponseEntity<>("Data final é anterior que a inicial.",HttpStatus.METHOD_FAILURE);
 		}
 		
 		return new ResponseEntity<>(locacaoRepository.save(locacao), HttpStatus.OK);	
 	}
 	
-	@GetMapping("/consultarLocacao")
-	@ResponseBody
-	public Optional<Locacao> consultarLocacao(@RequestParam Integer idLocacao) {
-		return locacaoRepository.findById(idLocacao);
+	@GetMapping("/locacao/{idLocacao}")
+	public Locacao consultarLocacao(@PathVariable("idLocacao") Integer idLocacao) {
+		return locacaoRepository.getOne(idLocacao);
 	}	
 	
-	@GetMapping("/listarLocacoes")
-	@ResponseBody
-	public Iterable<Locacao> listarLocacao() {
+	@GetMapping("/locacao")
+	public List<Locacao> listarLocacao() {
 		return locacaoRepository.findAll();
 	}	
 	
 	@SuppressWarnings("deprecation")
-	@PutMapping("/cancelarLocacao")
-	@ResponseBody
-	public ResponseEntity<?> cancelarLocacao(@RequestParam Integer idLocacao) {
+	@PutMapping("/locacao/{idLocacao}")
+	public ResponseEntity<?> cancelarLocacao(@PathVariable("idLocacao") Integer idLocacao) {
 		//Verifica se existe locação
 		if (!locacaoRepository.findById(idLocacao).isPresent() || 
 				locacaoRepository.locacaAtiva(idLocacao) == 0) {
 			return new ResponseEntity<>("Locação não encontrada ou já cancelada.",HttpStatus.METHOD_FAILURE);
 		}
 		
-		Locacao locacaoOri =
-				locacaoRepository
-		            .findById(idLocacao)
-		            .orElseThrow(null);
+		Locacao locacaoOri = locacaoRepository.getOne(idLocacao);
+		
 		locacaoOri.setStatus(0);
 		
 	    return new ResponseEntity<>(locacaoRepository.save(locacaoOri), HttpStatus.OK);

@@ -1,7 +1,7 @@
 package com.locadora.LocadoraCarros.model;
 
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -35,11 +35,11 @@ public class Locacao {
 	
 	@Basic(optional = false)
 	@Column(nullable = false)
-	private Date data_inicio;
+	private LocalDate data_inicio;
 	
 	@Basic(optional = false)
 	@Column(nullable = false)
-	private Date data_fim;
+	private LocalDate data_fim;
 	
 	private int status;
 	
