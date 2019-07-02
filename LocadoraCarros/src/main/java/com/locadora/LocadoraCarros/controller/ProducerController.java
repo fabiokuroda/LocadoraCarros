@@ -46,6 +46,10 @@ public class ProducerController {
 	public int calcularDiasRestantes(@RequestParam Integer id_cliente) {
 		LocalDate dataFim = locacaoRepository.getDataFimLocacao(id_cliente);
 		
+		if (dataFim == null) {
+			return 0;
+		}
+		
 		Clientes cliente = clientesRepository.getOne(id_cliente);
 		
 		Period period = Period.between(LocalDate.now(), dataFim);

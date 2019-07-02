@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.locadora.LocadoraCarros.model.Carros;
-import com.locadora.LocadoraCarros.model.Clientes;
 import com.locadora.LocadoraCarros.repository.CarrosRepository;
 
 @RestController
