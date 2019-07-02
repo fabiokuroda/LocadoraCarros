@@ -58,7 +58,7 @@ public class ProducerController {
 		
 		Mensagem mensagem = new Mensagem(cliente.getNome_cliente(), qtdDiasRestantes);
 		
-		send(mensagem);
+//		send(mensagem);
 		
 		return qtdDiasRestantes;
 	}
