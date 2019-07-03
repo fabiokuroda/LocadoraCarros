@@ -2,22 +2,18 @@ version: '3'
 
 services:
   mysql-docker-container:
-    hostname: "db"
     build:
-      context: . 
+      context: ./
       dockerfile: mysqldb.dockerfile
     ports:
-      - "3307:3306"
+      - "5454:3306"
     environment:
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_DATABASE=db_locadora
-      - MYSQL_USER=root
-      - MYSQL_PASSWORD=password
-    volumes:
-      - /data/mysql
+      
     container_name: mysql-docker-container
     networks:
-        - app_net
+        - net_net
 
   rabbit-docker-container:
     image: "rabbitmq:3"
@@ -34,21 +30,23 @@ services:
      - $PWD/storage/rabbit1:/var/lib/rabbitmq
     container_name: rabbit-docker-container
     networks:
-        - app_net
+        - net_net
         
   spring-boot-jpa-locadora:
     image: spring-boot-jpa-locadora-image
     build:
       context: ./
-      dockerfile: Dockerfile
+      dockerfile: app.dockerfile
     depends_on:
       - mysql-docker-container
-      - rabbit1
+      - rabbit-docker-container
     ports:
       - 8087:8080
     volumes:
       - /data/spring-boot-app
-    container_name: rabbit-docker-container
+    container_name: spring-boot-jpa-locadora
     networks:
-        - app_net
+        - net_net
         
+networks:
+  net_net:
